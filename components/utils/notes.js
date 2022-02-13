@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useReducer, useState } from "react"
 import { Global } from "../../cotext/context"
 import AddIcon from '@mui/icons-material/Add';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -6,7 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImageIcon from '@mui/icons-material/Image';
 import ColorLensOutlinedIcon from '@mui/icons-material/ColorLensOutlined';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { RedoOutlined } from "@mui/icons-material";
+import { FormatListBulletedOutlined, RedoOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 
 export      default   function  Notes(){
@@ -23,23 +23,56 @@ export      default   function  Notes(){
 //     })
 // }
 
-  
+
+
+const   reducer=(state,action)=>{
+    switch(action.type){
+        case    'color' :return {...state,color:action.content}
+        case    'index':return  {...state,index:action.index}
+        case    'imageSelection':return {...state,ImageSrc:action.content}
+        default :return {state}
+    }
+}
+
+const       initialState={
+    color:false,
+}
+const   [newState,newDispatch]=useReducer(reducer,initialState)
+console.log(newState)
 const       [title,setTitle]=useState('')
 const   [newNote,setNewNote]=useState('')
-console.log(title)
-console.log(newNote)
     const       [state1,setState]=useState([{content:'asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf',title:'asasfdsdfasdfwerewrqwerqwe'},
     {content:'sdf',title:'sdf'},
     {content:'sdf',title:'asdf'},
     {content:'sdf',title:'asdfedsafasd'},
     {content:'sdf',title:'asdfqwrwerc'}])
+
+    const   images=[
+        {
+            src:'https://www.gstatic.com/keep/backgrounds/travel_dark_thumb_0615.svg'
+        },{
+            src:'https://www.gstatic.com/keep/backgrounds/places_dark_thumb_0615.svg'
+        },
+        {src:'https://www.gstatic.com/keep/backgrounds/recipe_dark_thumb_0615.svg'
+    }
+    ]
+const       colors=[
+    {bgColor:'#0000008e'},
+    {bgColor:"#3c3c3c"},
+    {bgColor:"#ededed"}
+]
+
+
 const   buttons=[
-{Icon:NotificationsNoneIcon},
-{Icon:MoreVertIcon},
-{Icon:ImageIcon},
-{Icon:ColorLensOutlinedIcon},
-{Icon:UndoOutlinedIcon},
-{Icon:RedoOutlined},
+{Icon:NotificationsNoneIcon,onClick:()=>{console.log('asdf')}},
+{Icon:ImageIcon,onClick:()=>{console.log('asdf')}},
+{Icon:ColorLensOutlinedIcon,onClick:()=>{
+    newDispatch({type:"color",content:true})
+}},
+{Icon:MoreVertIcon,onClick:()=>{console.log('asdf')}},
+
+{Icon:UndoOutlinedIcon,onClick:()=>{console.log('asdf')}},
+{Icon:RedoOutlined,onClick:()=>{console.log('asdf')}},
 
 ]
 return      (
@@ -56,17 +89,19 @@ return      (
     ${state.dark?"bg-black":"bg-white"}
     `}>
 
-{state1.map(item=>(
-    <div    className=" 
+{state1.map((item,itemIndex)=>(
+   <div key={itemIndex}>
+        <div    className=" 
     hover:scale-105
     translate-all
+    z-30
     duration-300
     ease-in-out
     border-solid
     border-2
     border-gray-200
     rounded-md 
-    
+ 
     ">
 
 
@@ -97,13 +132,14 @@ return      (
 </div>
 <div    className="flex justify-between
 pb-2">
-    {buttons.map(({Icon})=>{
+    {buttons.map(({Icon,onClick},index)=>{
         return(
-          <IconButton>
+          index<4&& <IconButton   onClick={()=>{
+            onClick()
+            newDispatch({type:"index",index:itemIndex})
+        }}   key={index}>
                 <Icon 
-                    onClick={()=>{
-                        console.log('haisd')
-                    }}  className={`
+                     className={`
             ${state.dark?'text-white':'text-[#0000008e]'}
             text-sm`
         }/>
@@ -112,8 +148,71 @@ pb-2">
     })}
 </div>
 
-    </div>
 
+
+    </div>
+    {(newState.color&&newState.index===itemIndex)&&<div>
+<div    className={`${state.dark?'text-white bg-black':'text-[#0000008e] bg-white'}
+ z-40  w-[100%] 
+ h-[150px]
+ rounded-md
+ shadow-lg
+ flex
+ flex-col
+ justify-between
+ py-2
+ 
+ px-2
+ 
+
+`}>
+    <div    className="flex justify-between">
+{images.map(({src})=>{
+    return(
+       
+            
+                <img  src={src} className={`
+                w-8 h-8 cursor-pointer border-2 border-transparent	
+                border-solid
+                hover:${state.dark?'border-white':'border-black'}
+                hover:scale-105
+                translate-all
+                duration-300 
+                active:scale-90
+                rounded-full  
+                   object-contain`}  alt=""    />
+            
+   
+    )
+})}
+
+
+    </div>
+    <hr></hr>
+    <div    className="flex justify-between">
+
+{colors.map(({bgColor})=>{
+    return(
+        <div  className={`
+        w-8 h-8 cursor-pointer border-2 border-transparent	
+        border-solid
+        hover:${state.dark?"border-white":'border-black'}
+        active:scale-90
+        translate-all
+        duration-300
+        rounded-full    object-contain
+         hover:scale-105
+         `} 
+         style={{background:bgColor}}>
+            </div>
+    )
+})}
+    </div>
+    </div>
+       
+        </div>}
+   </div>
+    
 ))}
 
 
@@ -191,7 +290,8 @@ ${state.dark?'bg-black  text-white':'bg-white text-[#0000008e]'}`}
     role="textbox"
      aria-autocomplete="off" 
      aria-label="Title"
-    //  onFocus={(e)=>{
+     autoComplete="true"
+    //  onFocus={(e)=>{     
     //      if(e.target.innerHTML){
     //          console.log(e.target.innerHTML)
     //      }

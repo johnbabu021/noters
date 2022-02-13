@@ -24,7 +24,7 @@ rounded-md
 p-1
  ${state.dark?"bg-black":"bg-white"}
  `}/>
- <div onClick={()=>{dispatch({type:'darkMode',content:!state.dark})}}>
+ <div   className='cursor-pointer' onClick={()=>{dispatch({type:'darkMode',content:!state.dark})}}>
 {state.dark?<DarkModeIcon/>:<LightModeIcon />}
 </div>
 

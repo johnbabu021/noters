@@ -11,7 +11,8 @@ module.exports = {
       'white':'#fff',
       'gray-200':'#e5e7eb',
       'black':"#1c1c1e",
-      'accent-color':"#10b981"
+      'accent-color':"#10b981",
+      transparent:"transparent"
     },
     screens:{
       'xxs':'100px',
