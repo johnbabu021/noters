@@ -28,7 +28,8 @@ const       initialState={
     color:false,
     newNote:'',
     title:'',
-background:[]
+background:[],
+backgroundColor:[]
 
 }
 
@@ -36,13 +37,13 @@ const   reducer=(state,action)=>{
     console.log(state,"state")
     switch(action.type){
         case    'color' :return {...state,color:action.content}
-        case    'index':return  {...state,index:action.index}
-        case    'imageSelection':return {...state,ImageSrc:action.content}
+        case    'index':return  {...state,index:action.index,upper:action.upper}
         case    'colorSelection':    return  {...state,colorSrc:action.content}
         case    'newNote':return    {...state,newNote:action.content}
         case    'title':    return      {...state,title:action.content}
         case    'wholeIndex':   return      {...state,wholeIndex:action.index}
         case     'backgroundImage' :return  {...state,background:[...state.background,{index:action.index,ImageSrc:action.ImageSrc}]}
+        case     'backgroundColor'  :return {...state,backgroundColor:[...state.backgroundColor,{index:action.index,backgroundColor:action.ColorSrc}]}
         default :return {state}
     }
 }
@@ -96,6 +97,7 @@ return      (
     items-start
     justify-between
     gap-8
+    px-4
     ${state.dark?"bg-black":"bg-white"}
     `}>
 
@@ -166,12 +168,12 @@ pb-2">
         return(
           index<4&& <IconButton   onClick={()=>{
             onClick()
-            newDispatch({type:"index",index:itemIndex})
+            newDispatch({type:"index",index:itemIndex,upper:false})
           
         }}   key={index}>
                 <Icon 
                      className={`
-            ${(newState.background.find(({index})=>index===itemIndex))?'text-white':'text-[#0000008e]'}
+            ${(newState.background.find(({index})=>index===itemIndex)||state.dark)?'text-white':'text-[#0000008e]'}
             text-sm`
         }/>
           </IconButton>
@@ -223,7 +225,8 @@ pb-2">
                     }
                     
                     newDispatch({type:"backgroundImage",index:itemIndex,ImageSrc:src})   
-                    newDispatch({type:"imageSelection",content:src})}}
+                 
+                }}
                    />
             
    
@@ -248,7 +251,7 @@ pb-2">
          hover:scale-105
          `} 
 
-         onClick={()=>newDispatch({type:'colorSelection',content:bgColor})}
+         onClick={()=>newDispatch({type:'backgroundColor',index:itemIndex,ColorSrc:bgColor})}
          style={{background:bgColor}}>
             </div>
     )
@@ -289,9 +292,11 @@ onClick={()=>
 </div>
 
 {state.new&&<section    className="new_note fixed top-[10%]  lg:left-[32%]  xl:left-[30%] md:w-[80%] xs:w-[40%]  px-8  sm:left-[18%]     xxs:left-[10%] ">
-  
+ 
 <div
-    style={{background:`${(newState.background.find(({index})=>index===newState.wholeIndex))&&`url(${newState.background.find(({index})=>index===newState.wholeIndex).ImageSrc})`}`}}
+    style={{background:`${newState.background.find(({index})=>index===newState.wholeIndex)
+    ?`url(${newState.background.find(({index})=>index===newState.wholeIndex).ImageSrc})`
+    :`${state.dark?'#1c1c1e':'white'}`}`}}
 
 className={`new-items
 px-2
@@ -331,7 +336,7 @@ ${state.dark?'text-white':'text-[#0000008e]'}`}
  className={`
  title
  z-20
- ${(state.dark||newState.ImageSrc&&newState.wholeIndex===newState.index)?' text-white':' text-[#0000008e]'}   outline-none`}
+ ${(state.dark||newState.background.find(({index})=>index===newState.wholeIndex))?' text-white':' text-[#0000008e]'}   outline-none`}
  spellCheck="true"
   tabIndex="0"
    dir="ltr"
@@ -357,7 +362,7 @@ ${state.dark?'text-white':'text-[#0000008e]'}`}
 </div>
 
 <div    className={`
-relative ${(state.dark||newState.ImageSrc&&newState.wholeIndex===newState.index)?' text-white':'    text-[#0000008e]'}
+relative ${(state.dark||newState.background.find(({index})=>index===newState.wholeIndex))?' text-white':'    text-[#0000008e]'}
 `}>
 {newState.newNote===''&&<div    className={`
 absolute
@@ -383,10 +388,12 @@ onInput={(e)=>newDispatch({type:'newNote',content:e.target.innerHTML})}
 
 
     </div>
-   
+  
     <div 
 
-style={{background:`${newState.colorSrc&&newState.colorSrc}`}}
+style={{background:`${newState.backgroundColor.find(({index})=>index===newState.wholeIndex)
+?newState.backgroundColor.find(({index})=>index===newState.wholeIndex).backgroundColor
+:`${state.dark?'#1c1c1e':'white'}`}`}}
 
     className={`rounded-md  
     py-2
@@ -405,10 +412,13 @@ style={{background:`${newState.colorSrc&&newState.colorSrc}`}}
      basis-auto
      drop-shadow-2xl`}>
 {
-    buttons.map(({Icon},index)=>{return   (
-       <IconButton  key={index}>
+    buttons.map(({Icon,onClick},index)=>{return   (
+       <IconButton  key={index} onClick={()=>{
+           onClick()
+           newDispatch({type:"index",index:newState.wholeIndex,upper:true})
+       }}>
             <Icon className={`
-            ${(state.dark||newState.colorSrc)?'text-white':'text-[#0000008e]'}
+            ${(state.dark||newState.backgroundColor.find(({index})=>index===newState.wholeIndex))?'text-white':'text-[#0000008e]'}
            
             text-sm`
         }/>
@@ -417,7 +427,7 @@ style={{background:`${newState.colorSrc&&newState.colorSrc}`}}
 }
 <button className={`
  ml-auto 
- ${(state.dark||newState.colorSrc)?'text-gray-200':"text-[#0000008e]"}
+ ${(state.dark||newState.backgroundColor.find(({index})=>index===newState.wholeIndex))?'text-gray-200':"text-[#0000008e]"}
 `}  onClick={()=>dispatch({type:"newItem",content:false})} >close</button>
 
     </div>
