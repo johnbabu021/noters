@@ -131,7 +131,7 @@ console.log(newState.background.indexOf(newState.background.find(({index})=>{
     border-2
     border-gray-200
     rounded-md 
-  ${(newState.ImageSrc&&newState.index===itemIndex)&&'text-white'}
+  ${(newState.background.find(({index})=>index===itemIndex))&&'text-white'}
     
     `}>
 
@@ -171,7 +171,7 @@ pb-2">
         }}   key={index}>
                 <Icon 
                      className={`
-            ${(state.dark||newState.ImageSrc&&newState.index===itemIndex)?'text-white':'text-[#0000008e]'}
+            ${(newState.background.find(({index})=>index===itemIndex))?'text-white':'text-[#0000008e]'}
             text-sm`
         }/>
           </IconButton>
