@@ -289,9 +289,9 @@ onClick={()=>
 </div>
 
 {state.new&&<section    className="new_note fixed top-[10%]  lg:left-[32%]  xl:left-[30%] md:w-[80%] xs:w-[40%]  px-8  sm:left-[18%]     xxs:left-[10%] ">
-    
+  
 <div
-    style={{background:`${(newState.ImageSrc&&newState.wholeIndex===newState.index)&&`url(${newState.ImageSrc})`}`}}
+    style={{background:`${(newState.background.find(({index})=>index===newState.wholeIndex))&&`url(${newState.background.find(({index})=>index===newState.wholeIndex).ImageSrc})`}`}}
 
 className={`new-items
 px-2
