@@ -23,7 +23,7 @@ export      default function    BackgroundDetails({newState,itemIndex,images,col
         return(
            
                 
-                    <Image width={100} height={100} key={index} src={src} className={`
+                    <Image width={40} height={40} layout="fixed" key={index} src={src} className={`
                     w-8 h-8 cursor-pointer border-2 border-transparent	
                     border-solid
                     hover:${state.dark?'border-white':'border-black'}

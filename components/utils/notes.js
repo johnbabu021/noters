@@ -1,3 +1,14 @@
+/*
+todo- create next.config.js
+
+list next/image domains fix issue with color panel
+
+finialized------
+
+*/
+
+
+
 import { useContext, useReducer, useState } from "react"
 import { Global } from "../../cotext/context"
 import AddIcon from '@mui/icons-material/Add';
@@ -170,7 +181,7 @@ return      (
         {
             newState.customImage.filter(({index})=>index===itemIndex).map(({src},customIndex)=>{
              
-                return customIndex<=5&& <Image height={100} width={100} key={customIndex} alt="" className="w-full h-full min-w-[100px] min-h-[100px] " src={src}/>})
+                return customIndex<=5&& <Image height={100} width={100} key={customIndex} alt="" className="object-contain w-full h-full min-w-[100px] min-h-[100px] " src={src}/>})
         }
       
      
@@ -279,7 +290,7 @@ ${state.dark?'text-white':'text-[#0000008e]'}`}
      >
          <div className="grid grid-cols-3">
 {!state.save&&newState.customImage.filter(({index})=>index===newState.wholeIndex)?.map(({src},imgIndex)=>
-<Image  width={100} height={100}  key={imgIndex}    className="" src={src}/>
+<Image  width={100} height={100}  key={imgIndex}    className="object-contain" src={src}/>
 )}
 </div>
 
