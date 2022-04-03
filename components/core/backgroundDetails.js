@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 export      default function    BackgroundDetails({newState,itemIndex,images,colors,state,newDispatch})   {
 
    return <div>
@@ -17,11 +19,11 @@ export      default function    BackgroundDetails({newState,itemIndex,images,col
     
     `}>
         <div    className="flex justify-between">
-    {images.map(({src})=>{
+    {images.map(({src},index)=>{
         return(
            
                 
-                    <img  src={src} className={`
+                    <Image width={100} height={100} key={index} src={src} className={`
                     w-8 h-8 cursor-pointer border-2 border-transparent	
                     border-solid
                     hover:${state.dark?'border-white':'border-black'}
@@ -53,9 +55,9 @@ export      default function    BackgroundDetails({newState,itemIndex,images,col
         <hr></hr>
         <div    className="flex justify-between">
     
-    {colors.map(({bgColor})=>{
+    {colors.map(({bgColor},index)=>{
         return(
-            <div  className={`
+            <div key={index} className={`
             w-8 h-8 cursor-pointer border-2 border-transparent	
             border-solid
             hover:${state.dark?"border-white":'border-black'}

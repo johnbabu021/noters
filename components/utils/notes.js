@@ -9,6 +9,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import {  RedoOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import BackgroundDetails from "../core/backgroundDetails";
+import Image from "next/image";
 
 export      default   function  Notes(){
     const       {state,dispatch}=useContext(Global)
@@ -169,7 +170,7 @@ return      (
         {
             newState.customImage.filter(({index})=>index===itemIndex).map(({src},customIndex)=>{
              
-                return customIndex<=5&& <img className="w-full h-full min-w-[100px] min-h-[100px] " src={src}/>})
+                return customIndex<=5&& <Image height={100} width={100} key={customIndex} alt="" className="w-full h-full min-w-[100px] min-h-[100px] " src={src}/>})
         }
       
      
@@ -277,8 +278,8 @@ ${state.dark?'text-white':'text-[#0000008e]'}`}
  
      >
          <div className="grid grid-cols-3">
-{!state.save&&newState.customImage.filter(({index})=>index===newState.wholeIndex)?.map(({src})=>
-<img    className="" src={src}/>
+{!state.save&&newState.customImage.filter(({index})=>index===newState.wholeIndex)?.map(({src},imgIndex)=>
+<Image  width={100} height={100}  key={imgIndex}    className="" src={src}/>
 )}
 </div>
 
@@ -298,7 +299,7 @@ ${state.dark?'text-white':'text-[#0000008e]'}`}
    contentEditable="true" 
     aria-multiline="true" 
     role="textbox"
-     aria-autocomplete="off" 
+     aria-autocomplete="none" 
      aria-label="Title"
      autoComplete="true"
 
