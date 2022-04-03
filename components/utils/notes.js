@@ -8,33 +8,22 @@ import ColorLensOutlinedIcon from '@mui/icons-material/ColorLensOutlined';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import {  RedoOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import BackgroundDetails from "../core/backgroundDetails";
 
 export      default   function  Notes(){
     const       {state,dispatch}=useContext(Global)
 
-// if(typeof window==='object'){
-//     const       newNote=document.querySelector('.new_note')
-//     const   all=document.querySelector('.all_item')
-//     document.addEventListener('click',(e)=>{
-//         if(newNote!==e.target&&state.new){
-// dispatch({type:"newItem",content:false})
-// // console.log()
-//         }
-//     })
-// }
-const  newdata={ImageSrc: "https://www.gstatic.com/keep/backgrounds/recipe_dark_thumb_0615.svg",index: 2}
 
 const       initialState={
     color:false,
     newNote:'',
     title:'',
 background:[],
-backgroundColor:[]
+backgroundColor:[],
+customImage:[]
 
 }
-
 const   reducer=(state,action)=>{
-    console.log(state,"state")
     switch(action.type){
         case    'color' :return {...state,color:action.content}
         case    'index':return  {...state,index:action.index,upper:action.upper}
@@ -44,19 +33,20 @@ const   reducer=(state,action)=>{
         case    'wholeIndex':   return      {...state,wholeIndex:action.index}
         case     'backgroundImage' :return  {...state,background:[...state.background,{index:action.index,ImageSrc:action.ImageSrc}]}
         case     'backgroundColor'  :return {...state,backgroundColor:[...state.backgroundColor,{index:action.index,backgroundColor:action.ColorSrc}]}
+        case    'imageSrc'  :   return  {...state,customImage:[...state.customImage,{index:action.index,src:action.src}]}
         default :return {state}
     }
 }
 
 
 const   [newState,newDispatch]=useReducer(reducer,initialState)
-console.log(newState)
+console.log(newState.index)
 
-    const       [state1,setState]=useState([{content:'asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf',title:'asasfdsdfasdfwerewrqwerqwe'},
-    {content:'sdf',title:'sdf'},
-    {content:'sdf',title:'asdf'},
-    {content:'sdf',title:'asdfedsafasd'},
-    {content:'sdf',title:'asdfqwrwerc'}])
+    const       [state1,setState]=useState([{content:'asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf',itemIndex:5,title:'asasfdsdfasdfwerewrqwerqwe'},
+    {content:'sdf',itemIndex:1,title:'sdf'},
+    {content:'sdf',itemIndex:2,title:'asdf'},
+    {content:'sdf',itemIndex:3,title:'asdfedsafasd'},
+    {content:'sdf',itemIndex:4,title:'asdfqwrwerc'}])
 
     const   images=[
         {
@@ -73,50 +63,65 @@ const       colors=[
     {bgColor:"#5c2b29"}
 ]
 
-
+let img
 const   buttons=[
-{Icon:NotificationsNoneIcon,onClick:()=>{console.log('asdf')}},
-{Icon:ImageIcon,onClick:()=>{console.log('asdf')}},
-{Icon:ColorLensOutlinedIcon,onClick:()=>{
+{Icon:NotificationsNoneIcon,onClick:(itemIndex)=>{console.log('asdf')}},
+{Icon:ImageIcon,onClick:(itemIndex)=>{
+if(typeof   window==='object'){
+   const    input= document.createElement('input')
+   input.type='file'
+   input.name='avatar'
+   input.accept="image/png,image/jpeg"
+   input.click()
+   input.addEventListener('change',()=>{
+    const   file=input.files[0]
+if(!file.type.startsWith('image/')){return}
+img=document.createElement('img')
+img.file=file
+
+const   reader=new  FileReader()
+reader.onload=(function(aImg){return   function    (e){
+    newDispatch({type:'imageSrc',src:e.target.result,index:itemIndex})
+    
+
+    aImg.src=e.target.result}})(img)
+reader.readAsDataURL(file)
+
+
+
+})
+}
+
+}},
+{Icon:ColorLensOutlinedIcon,onClick:(itemIndex)=>{
     newDispatch({type:"color",content:true})
 }},
-{Icon:MoreVertIcon,onClick:()=>{console.log('asdf')}},
+{Icon:MoreVertIcon,onClick:(itemIndex)=>{console.log('asdf')}},
 
-{Icon:UndoOutlinedIcon,onClick:()=>{console.log('asdf')}},
-{Icon:RedoOutlined,onClick:()=>{console.log('asdf')}},
+{Icon:UndoOutlinedIcon,onClick:(itemIndex)=>{console.log('asdf')}},
+{Icon:RedoOutlined,onClick:(itemIndex)=>{console.log('asdf')}},
 
 ]
 return      (
     <section    className={`
     absolute
-    top-20
-    left-32
+    top-14
+    left-16
     min-h-[80vh]
     flex
+    min-w-[100vw]
     flex-wrap
     items-start
+    pt-4
     justify-between
     gap-8
     px-4
     ${state.dark?"bg-black":"bg-white"}
     `}>
 
-{state1.map((item,itemIndex)=>(
+{state1.map(({title,content,itemIndex})=>(
    <div key={itemIndex}>
-       {/* {
-        //    console.log(newState.background.includes(itemIndex))
-console.log(newState.background.indexOf(newState.background.find(({index})=>{
-    console.log(index,itemIndex)
-      return  index===itemIndex})))
-    
-
-    // newState.background.map(item=>{
-    //     console.log(item.index,itemIndex)
-    // })
-
-}{
-   console.log(newState.background.indexOf(newdata))
-} */}
+      
         <div    style={{
             backgroundImage:`url(${(newState.background.find(({index})=>index===itemIndex)
             &&newState.background.find(({index})=>index===itemIndex).ImageSrc)})`
@@ -138,11 +143,11 @@ console.log(newState.background.indexOf(newState.background.find(({index})=>{
     `}>
 
 
-<div key={item.title} 
+<div key={itemIndex} 
     onClick={()=>{
         dispatch({type:'newItem',content:true})
-     newDispatch({type:'newNote',content:item.title})
-     newDispatch({type:'title',content:item.content})
+     newDispatch({type:'newNote',content:title})
+     newDispatch({type:'title',content:content})
      newDispatch({type:'wholeIndex',index:itemIndex})
       
     }}
@@ -158,17 +163,30 @@ console.log(newState.background.indexOf(newState.background.find(({index})=>{
     break-words
     max-h-[70vh]
     py-2`}>
-<h1>{item.title}</h1>
-<p  className="mb-2"    >{item.content}</p>
+        {
+    newState.customImage.filter(({index})=>index===itemIndex)&&
+    <div    className="grid grid-cols-3">
+        {
+            newState.customImage.filter(({index})=>index===itemIndex).map(({src},customIndex)=>{
+             
+                return customIndex<=5&& <img className="w-full h-full min-w-[100px] min-h-[100px] " src={src}/>})
+        }
+      
+     
+    </div>
+    }
+<h1>{title}</h1>
+<p  className="mb-2"    >{content}</p>
+
 
 </div>
 <div    className="flex justify-between
 pb-2">
     {buttons.map(({Icon,onClick},index)=>{
         return(
-          index<4&& <IconButton   onClick={()=>{
-            onClick()
-            newDispatch({type:"index",index:itemIndex,upper:false})
+          index<4&& <IconButton   onClick={async()=>{
+            await  newDispatch({type:"index",index:itemIndex,upper:false})
+            onClick(itemIndex)
           
         }}   key={index}>
                 <Icon 
@@ -184,82 +202,9 @@ pb-2">
 
 
     </div>
-    {(newState.color&&newState.index===itemIndex)&&<div>
-<div    className={`${state.dark?'text-white bg-black':'text-[#0000008e] bg-white'}
- z-40  w-[100%] 
- h-[150px]
- rounded-md
- shadow-lg
- flex
- flex-col
- justify-between
- py-2
- 
- px-2
- 
-
-`}>
-    <div    className="flex justify-between">
-{images.map(({src})=>{
-    return(
-       
-            
-                <img  src={src} className={`
-                w-8 h-8 cursor-pointer border-2 border-transparent	
-                border-solid
-                hover:${state.dark?'border-white':'border-black'}
-                hover:scale-105
-                transition-all
-                duration-300 
-                active:scale-90
-                rounded-full  
-                   object-contain`}  alt="" 
-                   onClick={()=>{
-                    const   exists=newState.background.find(({index})=>index===itemIndex)
-                    let content
-                    if(exists){
-                      content=newState.background.splice(newState.background.indexOf(exists),1,{index:itemIndex,ImageSrc:src})
-                    }
-                    else{
-                        content=newState.background.push({index:itemIndex,ImageSrc:src})
-                    }
-                    
-                    newDispatch({type:"backgroundImage",index:itemIndex,ImageSrc:src})   
-                 
-                }}
-                   />
-            
-   
-    )
-})}
-
-
-    </div>
-    <hr></hr>
-    <div    className="flex justify-between">
-
-{colors.map(({bgColor})=>{
-    return(
-        <div  className={`
-        w-8 h-8 cursor-pointer border-2 border-transparent	
-        border-solid
-        hover:${state.dark?"border-white":'border-black'}
-        active:scale-90
-        transition-all
-        duration-300
-        rounded-full    object-contain
-         hover:scale-105
-         `} 
-
-         onClick={()=>newDispatch({type:'backgroundColor',index:itemIndex,ColorSrc:bgColor})}
-         style={{background:bgColor}}>
-            </div>
-    )
-})}
-    </div>
-    </div>
-       
-        </div>}
+   { (newState.color&&newState.index===itemIndex&&newState.upper===false)&&
+   <BackgroundDetails  itemIndex={itemIndex} colors={colors} state={state}  newDispatch={newDispatch}   images={images} newState={newState} />
+   }
    </div>
     
 ))}
@@ -285,13 +230,17 @@ onClick={()=>
     {
         newDispatch({type:'title',content:''})
         newDispatch({type:'newNote',content:''})
-    dispatch({type:"newItem",content:true})}}
+    dispatch({type:"newItem",content:true})
+dispatch({type:'save',content:true})
+
+}}
 
 >
   <AddIcon/>  
 </div>
-
-{state.new&&<section    className="new_note fixed top-[10%]  lg:left-[32%]  xl:left-[30%] md:w-[80%] xs:w-[40%]  px-8  sm:left-[18%]     xxs:left-[10%] ">
+{/* state.new creates an editable window */}
+{state.new&&<section    className="new_note fixed top-[10%]  lg:left-[32%]  xl:left-[30%]  md:w-[690px]
+xxs:w-[440px]  px-8  sm:left-[18%]     xxs:left-[10%] ">
  
 <div
     style={{background:`${newState.background.find(({index})=>index===newState.wholeIndex)
@@ -327,6 +276,12 @@ relative
 ${state.dark?'text-white':'text-[#0000008e]'}`}
  
      >
+         <div className="grid grid-cols-3">
+{!state.save&&newState.customImage.filter(({index})=>index===newState.wholeIndex)?.map(({src})=>
+<img    className="" src={src}/>
+)}
+</div>
+
 {newState.title===''&&<div    className="absolute
  top-0 
  z-10
@@ -346,11 +301,6 @@ ${state.dark?'text-white':'text-[#0000008e]'}`}
      aria-autocomplete="off" 
      aria-label="Title"
      autoComplete="true"
-    //  onFocus={(e)=>{     
-    //      if(e.target.innerHTML){
-    //          console.log(e.target.innerHTML)
-    //      }
-    //  }}
 
 
     onInput={(e)=>{
@@ -413,9 +363,10 @@ style={{background:`${newState.backgroundColor.find(({index})=>index===newState.
      drop-shadow-2xl`}>
 {
     buttons.map(({Icon,onClick},index)=>{return   (
-       <IconButton  key={index} onClick={()=>{
-           onClick()
-           newDispatch({type:"index",index:newState.wholeIndex,upper:true})
+       <IconButton  key={index} onClick={async()=>{
+        await  newDispatch({type:"index",index:newState.wholeIndex,upper:true})
+
+           onClick(newState.wholeIndex)
        }}>
             <Icon className={`
             ${(state.dark||newState.backgroundColor.find(({index})=>index===newState.wholeIndex))?'text-white':'text-[#0000008e]'}
@@ -428,9 +379,45 @@ style={{background:`${newState.backgroundColor.find(({index})=>index===newState.
 <button className={`
  ml-auto 
  ${(state.dark||newState.backgroundColor.find(({index})=>index===newState.wholeIndex))?'text-gray-200':"text-[#0000008e]"}
-`}  onClick={()=>dispatch({type:"newItem",content:false})} >close</button>
+`}  onClick={()=>
+    {
+        console.log(state.new,"newItem")
+if(state.save){
+    console.log(newState)
+    setState(state1=>[...state1,{title:newState.title,content:newState.newNote,itemIndex:Math.floor(Math.random()*8000)}])
+    dispatch({type:'save',content:false})
+    }
+    else{
+        // console.log(state1.splice(state1.indexOf(state1.find(({itemIndex})=>itemIndex===newState.wholeIndex)),1,{title:'asdf',content:'adfsasdf',itemIndex:3455}))
+      //setstate=>state is issue
+      let   date
+        setState(state1=>[...state1,
+           
+          state1.splice(
+                state1.indexOf(state1.find(({itemIndex})=>
+            itemIndex===newState.wholeIndex)),1,
+            {title:newState.title,content:newState.newNote,itemIndex:Math.floor(Math.random()*8000)})
+            
+        ]
+            
+            )
+    }
+    dispatch({type:"newItem",content:false})
+    console.log(state1)
+
+}
+
+
+}
+
+
+
+>close</button>
 
     </div>
+    { (newState.color&&newState.index===newState.wholeIndex&&newState.upper===true)&&
+   <BackgroundDetails  itemIndex={newState.wholeIndex} colors={colors} state={state}  newDispatch={newDispatch}   images={images} newState={newState} />
+   }
 
     
     </section>}

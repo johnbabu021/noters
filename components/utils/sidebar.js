@@ -43,10 +43,10 @@ const       [width,setWidth]=useState(false)
                 console.log(width)
             }}/>
           {
-              inputValue.map(({name,Icon})=>{
+              inputValue.map(({name,Icon},index)=>{
                   return(
                  
-                         <button>{width?name:<Icon/>}</button>
+                         <button    key={index}>{width?name:<Icon/>}</button>
                      
                 
                   )

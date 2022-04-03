@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <div  className={`
-    ${state.dark?"text-white bg-black":"text-black bg-white"} min-h-[100vh]`}  >
+    ${state.dark?"text-white bg-black":"text-black bg-white"} `}  >
      <Header/>
      <SideBar/>
      <Notes/>

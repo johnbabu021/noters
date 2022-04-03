@@ -8,6 +8,7 @@ export  default function    GlobalReducer({children}){
         switch(action.type){
           case 'darkMode': return   {...state,dark:action.content}
           case  'newItem':return     {...state,new:action.content}
+          case    'save'  :return   {...state,save:action.content}
           default :return state
         }
           }
