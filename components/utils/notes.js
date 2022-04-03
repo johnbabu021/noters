@@ -1,9 +1,9 @@
+
+
 /*
-todo- create next.config.js
+fucking happens on icons with deployement 
+get the size to beeter looking
 
-list next/image domains fix issue with color panel
-
-finialized------
 
 */
 
